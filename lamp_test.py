@@ -110,10 +110,14 @@ def main():
     
     cross_bbox = rs.BoundingBox([cross])
 
+    
+
     cmin, cmax = box_to_points(cross_bbox)
 
     cz_range = cmax[2] - cmin[2]
     cz = 0.5 * (cmax[2] + cmin[2])
+
+    c_ctr, _ = rs.CurveAreaCentroid(cross)
 
     # make sure it's planar in XY
     if cz_range > 1e-9:
@@ -138,7 +142,7 @@ def main():
     # get the point closest to the center for the
     # cross-section curve
     
-    r, pc = get_inscribed_radius(cross, [0, 0, cz])
+    r, pc = get_inscribed_radius(cross, c_ctr)
 
     ##################################################
     # get the range of z-values for the profile curve
@@ -179,7 +183,7 @@ def main():
         # we need to set up some transformations:
 
         # translate cross section curve down to z=0
-        T1 = rs.XformTranslation([0, 0, -cz])
+        T1 = rs.XformTranslation(mz.vec_mul(list(c_ctr), -1.0))
 
         # scale it along XY by the ratio of radii
         S1 = rs.XformScale([ri/r, ri/r, 1.0])
@@ -228,7 +232,7 @@ def main():
         p0 = points[i0]
         p1 = points[i1]
         l01 = rs.AddLine(p0, p1)
-        pipe = rs.AddPipe(l01, [0, 1], [strut_rad, strut_rad], 1)
+        pipe = rs.AddPipe(l01, [0, 1], [strut_rad, strut_rad], cap=2)
         rs.DeleteObject(l01)
         strut_pipes.append(pipe)
 
