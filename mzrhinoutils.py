@@ -1,4 +1,5 @@
 import rhinoscriptsyntax as rs
+import math
 
 ################################################################################
 # Vector utility functions
@@ -6,11 +7,17 @@ import rhinoscriptsyntax as rs
 def vec_add(a, b):
     return type(a)(ai+bi for ai, bi in zip(a, b))
 
+def vec_mul(v, s):
+    return type(v)(vi*s for vi in v)
+
 def vec_sub(a, b):
     return type(a)(ai-bi for ai, bi in zip(a, b))
 
 def vec_dot(a, b):
     return sum(ai*bi for ai, bi in zip(a, b))
+
+def vec_length(a):
+    return math.sqrt(vec_dot(a, a))
 
 def vec_scalar_product(k, a):
     return type(a)(k*ai for ai in a)
@@ -37,6 +44,8 @@ def vec3_cross(a, b):
     return type(a)([a[1]*b[2] - a[2]*b[1],
                     a[2]*b[0] - a[0]*b[2],
                     a[0]*b[1] - a[1]*b[0]])
+
+
 
 ################################################################################
 # Geometric utility functions
